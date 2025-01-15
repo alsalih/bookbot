@@ -1,6 +1,8 @@
-# bookbot
+# Text Analyser
 
-BookBot reads a book and returns measurements and indicators such as:
+Text Analyser analyses text for numerous indicators such as:
 
-- word count
-- alphabetical character frequencies.
+- word, sentence, and paragraph counts,
+- word, sentence, and paragraph mean lengths,
+- most and least frequent words, and
+- alphabet frequencies

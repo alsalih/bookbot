@@ -1,10 +1,10 @@
 # Author:   Haidar Alsalih
 # Date  :   14/01/2025
 #
-# Aim   :   create a bookbot terminal program which reads and analyses a 
-#           plaintext book for useful indicators such as word, 
-#           sentence, and paragraph counts and mean lengths, most and least 
-#           frequent words, as well as alphabet frequencies.
+# Aim   :   create a text analyser terminal program which reads and analyses a 
+#           plaintext file for useful indicators such as word, sentence, and
+#           paragraph counts and mean lengths, most and least frequent words, as
+#           well as alphabet frequencies.
 #
 # Notes :   Text Analyser assumes text files are plaintext files and filenames
 #           use dashes (-) instead of spaces, e.g., "romeo-and-juliet.txt"
@@ -16,12 +16,12 @@ def main():
        sentence, and paragraph counts and mean lengths, most and least frequent 
        words, as well as alphabet frequencies."""
     # ************************************************************************ #
-    # section 1: user chooses book for bookbot to analyse
+    # section 1: user chooses text for analyser to analyse
     # ************************************************************************ #
 
-    # list books
+    # list texts
 
-    # library is set to the directory/folder where books are stored
+    # library is set to the directory/folder where texts are stored
     library = 'books'
     books = []
     
@@ -37,7 +37,7 @@ def main():
     book_path = "books/" + "-".join(book_path.split(" ")).lower() + ".txt"
 
     # ************************************************************************ #
-    # section 2: bookbot analyses the book and displays the results in a report 
+    # section 2: analyser analyses the text and displays the results in a report 
     # ************************************************************************ #
 
     text = get_book_text(book_path)
@@ -63,17 +63,17 @@ def main():
 # *** END main() *** 
 
 def get_book_text(path):
-    """given a file path to a book, returns the book's text"""
+    """given a file path to a book, returns the book's text."""
     with open(path) as book:
         return book.read()
     
 def get_words(text):
-    """given a text, returns a list of its words"""
+    """given a text, returns a list of its words."""
     return text.split()
 
-def get_mean_length(text, unit = "words"):
+def get_mean_length(text, unit):
     """given a list of texts (in words, sentences, or paragraphs), and a unit
-    of either characters or words, returns the mean length """
+    of either characters or words, returns the mean length."""
 
 def get_sentences(text):
     """given a text, returns a list of its sentences"""
@@ -98,7 +98,7 @@ def get_sentences(text):
     return sentences
 
 def get_paragraphs(text):
-    """given a text, returns a list of its paragraphs"""
+    """given a text, returns a list of its paragraphs."""
     return text.split("\n\n")
 
 

@@ -4,10 +4,9 @@ def main():
 
     text = get_book_text(book_path)
     num_words = get_num_words(text)
-    alphabet_frequencies = get_char_frequencies(text)
+    character_frequencies = sort_freqs(get_char_frequencies(text))
 
-    print(f"{num_words} words found in the document")
-    print(alphabet_frequencies)
+    print(get_text_report(book_path, num_words, character_frequencies))
 
 def get_book_text(path):
     """takes a path to a book as input, and returns the book's text"""
@@ -24,12 +23,42 @@ def get_char_frequencies(text):
     char_freqs = dict()
 
     for char in text:
-        lowered = char.lower()
-        if lowered in char_freqs:
-            char_freqs[lowered] += 1
-        else:
-            char_freqs[lowered] = 1
+        if char.isalpha():
+            lowered = char.lower()
+            if lowered in char_freqs:
+                char_freqs[lowered] += 1
+            else:
+                char_freqs[lowered] = 1
     
     return char_freqs
 
+
+
+def sort_freqs(dict):
+    sorted_freqs = []
+    for freq in dict:
+        sorted_freqs.append({"char": freq, "frequency": dict[freq]})
+
+    def sort_on(dict):
+        return dict["frequency"]
+        
+    sorted_freqs.sort(reverse=True, key=sort_on)
+
+    return sorted_freqs
+
+
+
+def get_text_report(book_path, num_words, char_freqs):
+    text_report = "**************************************************" + "\n"
+    text_report += f"*** Begin Report of {book_path} ***" + "\n"
+    text_report += "**************************************************" + "\n\n"
+
+    text_report += f"There were {num_words} words found in {book_path}" + "\n"
+    for char in char_freqs:
+        text_report += f"The '{char["char"]}' character was found {char["frequency"]} times." + "\n"
+    
+    text_report += "\n*** End Report ***"
+
+    return text_report
+    
 main()

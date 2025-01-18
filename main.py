@@ -44,7 +44,8 @@ def main():
 
     words = get_words(text)
     num_words = len(words)
-    # words_mean_length = get_mean_length(words)
+    words_mean_length = get_mean_length(words, "characters")
+    print(f"mean length of words: {words_mean_length} characters per word")
     # num_unique_words = len(get_unique_words(words))
 
     # # to do if time permits
@@ -54,11 +55,11 @@ def main():
 
     sentences = get_sentences(text)
     num_sentences = len(sentences)
-    # sentences_mean_length = get_mean_length(sentences)
+    # sentences_mean_length = get_mean_length(sentences, "words")
 
     paragraphs = get_paragraphs(text)
     num_paragraphs = len(paragraphs)
-    # paragraphs_mean_length = get_mean_length(paragraphs)
+    # paragraphs_mean_length = get_mean_length(paragraphs, "words")
 
 # *** END main() *** 
 
@@ -72,8 +73,19 @@ def get_words(text):
     return text.split()
 
 def get_mean_length(text, unit):
-    """given a list of texts (in words, sentences, or paragraphs), and a unit
-    of either characters or words, returns the mean length."""
+    """given a text as a list (words, sentences, or paragraphs), and a unit
+    of either characters or words, returns the mean length in that unit."""
+    mean_length = 0
+
+    if unit == "characters":
+        for word in text:
+            mean_length += len(word)
+        mean_length = mean_length / len(text)
+
+    if unit == "words":
+        pass
+
+    return mean_length
 
 def get_sentences(text):
     """given a text, returns a list of its sentences"""
@@ -113,19 +125,6 @@ def get_paragraphs(text):
 
 
 
-
-
-# def get_book_text(path):
-#     """takes a path to a book as input, and returns the book's text"""
-#     with open(path) as f: # opening the book file
-#         return f.read() # returning the result of reading the file
-
-# def get_num_words(text):
-#     """takes a book's text as input, and returns the number of words in the 
-#     text"""
-#     words = text.split()
-#     return len(words)
-
 # def get_char_frequencies(text):
 #     """takes a book's text as input, and returns the frequencies of each letter 
 #     of the alphabet"""
@@ -140,9 +139,6 @@ def get_paragraphs(text):
 #                 char_freqs[lowered] = 1
     
 #     return char_freqs
-
-# def get_mean_word_length(text):
-#     pass
 
 # def sort_freqs(dict):
 #     sorted_freqs = []

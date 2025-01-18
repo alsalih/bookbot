@@ -1,10 +1,10 @@
 # Author:   Haidar Alsalih
 # Date  :   14/01/2025
 #
-# Aim   :   create a text analyser terminal program which reads and analyses a 
-#           plaintext file for useful indicators such as word, sentence, and
-#           paragraph counts and mean lengths, most and least frequent words, as
-#           well as alphabet frequencies.
+# Aim   :   Create a text analyser terminal program which reads and analyses a 
+#           text file for useful indicators such as word, sentence, and
+#           paragraph counts, and mean lengths; most and least frequent words,
+#           and alphabet frequencies.
 #
 # Notes :   Text Analyser assumes text files are plaintext files and filenames
 #           use dashes (-) instead of spaces, e.g., "romeo-and-juliet.txt"
@@ -19,33 +19,23 @@ def main():
     # section 1: user chooses text for analyser to analyse
     # ************************************************************************ #
 
-    # list texts
-
     # library is set to the directory/folder where texts are stored
-    library = 'books'
-    books = []
-    
-    print("List of books: \n")
-    # use os.listdir() method to find books in library folder and list them
-    for book in os.listdir(library):
-        books.append(book)
-        book_title = " ".join(book[:-4].split("-")).title()
-        print(book_title)
+    library = 'texts'
+    list_texts(library)
 
-    # get path to user's desired book
-    book_path = input("\nEnter name of book to analyse: ")
-    book_path = "books/" + "-".join(book_path.split(" ")).lower() + ".txt"
+    # get path to user's desired text
+    text = input("\nEnter name of text to analyse: ")
+    text_path = f"{library}/" + "-".join(text.split(" ")).lower() + ".txt"
 
     # ************************************************************************ #
     # section 2: analyser analyses the text and displays the results in a report 
     # ************************************************************************ #
 
-    text = get_book_text(book_path)
+    text = get_text(text_path)
 
     words = get_words(text)
     num_words = len(words)
-    words_mean_length = get_mean_length(words, "characters")
-    print(f"mean length of words: {words_mean_length} characters per word")
+    words_mean_length = round(get_mean_length(words, "characters"), 2)
     # num_unique_words = len(get_unique_words(words))
 
     # # to do if time permits
@@ -55,18 +45,32 @@ def main():
 
     sentences = get_sentences(text)
     num_sentences = len(sentences)
-    # sentences_mean_length = get_mean_length(sentences, "words")
+    sentences_mean_length = round(get_mean_length(sentences, "words"), 2)
 
     paragraphs = get_paragraphs(text)
     num_paragraphs = len(paragraphs)
-    # paragraphs_mean_length = get_mean_length(paragraphs, "words")
+    paragraphs_mean_length = round(get_mean_length(paragraphs, "words"), 2)
+
+    print(f"Num. Words: {num_words}\nmean word length: {words_mean_length} characters\n\
+num. sentences: {num_sentences}\nmean sent. length: {sentences_mean_length} words\n\
+num. paragraphs: {num_paragraphs}\nmean para. length: {paragraphs_mean_length} words")
 
 # *** END main() *** 
 
-def get_book_text(path):
-    """given a file path to a book, returns the book's text."""
-    with open(path) as book:
-        return book.read()
+def list_texts(library):
+    texts = []
+    
+    print("List of texts: \n")
+    # use os.listdir() method to find texts in library folder and list them
+    for text in os.listdir(library):
+        texts.append(text)
+        text_title = " ".join(text[:-4].split("-")).title()
+        print(text_title)
+
+def get_text(path):
+    """given a file path to a text-file, returns the file's text contents."""
+    with open(path) as text:
+        return text.read()
     
 def get_words(text):
     """given a text, returns a list of its words."""
@@ -83,7 +87,9 @@ def get_mean_length(text, unit):
         mean_length = mean_length / len(text)
 
     if unit == "words":
-        pass
+        for piece in text:
+            mean_length += len(piece.split())
+        mean_length = mean_length / len(text)
 
     return mean_length
 

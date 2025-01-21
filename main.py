@@ -186,8 +186,8 @@ def get_text_report(text_title, report_dict):
     text_report += "\nMost Frequent Words:\n"
     for word in report_dict["word_frequencies"][:10]:
         text_report += f"{word[0]}: {word[1]}\n"
+        
     text_report += "\nLeast Frequent Words (>0.1% to keep stat meaningful):\n"
-
     counter = 0
     for word in report_dict["word_frequencies"][-1::-1]:
         if word[1] > len(report_dict["word_frequencies"]) / 1000 and counter < 10:

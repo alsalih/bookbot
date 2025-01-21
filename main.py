@@ -139,6 +139,8 @@ def get_text_report(text_title, report_dict):
             result += " "
 
         return result
+    
+    stats = lambda x, y: f"|{space(22, x)}|{space(26, y)}|\n"
 
     text_report = "\n...\n"
     text_report += "\nThank you for using Text Analyser!\n\n"
@@ -146,8 +148,19 @@ def get_text_report(text_title, report_dict):
     text_report += "---------------------------------------------------\n"
     text_report += "|      Num. Words      |      Mean Word length    |\n"
     text_report += "---------------------------------------------------\n"
-    text_report += f"|{space(22, num_words)}|{space(26, words_mean_length)}|\n"
+    text_report += stats(num_words, words_mean_length)
     text_report += "---------------------------------------------------\n"
+    text_report += "---------------------------------------------------\n"
+    text_report += "|    Num. Sentences    |     Mean Sent. Length    |\n"
+    text_report += "---------------------------------------------------\n"
+    text_report += stats(num_sentences, sent_mean_len)
+    text_report += "---------------------------------------------------\n"
+    text_report += "---------------------------------------------------\n"
+    text_report += "|    Num. Paragraphs   |    Mean Parag. Length    |\n"
+    text_report += "---------------------------------------------------\n"
+    text_report += stats(num_paragraphs, parags_mean_len)
+    text_report += "---------------------------------------------------\n"
+    
     
     return text_report
 

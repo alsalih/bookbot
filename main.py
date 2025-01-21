@@ -29,8 +29,13 @@ def main():
     list_texts(library)
 
     # get path to user's desired text
-    text_title = input("\nEnter name of text to analyse: ")
-    text_path = f"{library}/" + "-".join(text_title.split(" ")).lower() + ".txt"
+    while True:
+        text_title = input("\nEnter name of text to analyse: ")
+        text_path = f"{library}/" + "-".join(text_title.split(" ")).lower() + ".txt"
+        if os.path.isfile(text_path):
+            break
+        else:
+            print(f"Error: The file {text_path} was not found. Please try again.")
 
     # ************************************************************************#
     # section 2: analyser analyses the text and displays the results in a report 
@@ -56,19 +61,24 @@ def main():
 # *** END main() *** 
 
 def list_texts(library):
-    texts = []
-    
-    print("List of texts: \n")
+    """Lists the texts available in the library folder."""
+
     # use os.listdir() method to find texts in library folder and list them
+    print("\nAvailable texts: \n")
     for text in os.listdir(library):
-        texts.append(text)
-        text_title = " ".join(text[:-4].split("-")).title()
-        print(text_title)
+        print(" ".join(text[:-4].split("-")).title())
 
 def get_text_matter(path):
     """given a file path to a text-file, returns the file's text matter."""
-    with open(path) as text:
-        return text.read()
+    try:
+        with open(path, 'r') as text:
+            return text.read()
+    except FileNotFoundError:
+        print(f"Error: The file {path} was not found.")
+        return ""
+    except IOError:
+        print(f"Error: An error occurred while reading the file {path}.")
+        return ""
     
 def get_words(text_matter):
     """given a text's matter, returns a list of its words."""
@@ -80,16 +90,11 @@ def mean_len(text_matter, unit):
     mean_len = 0
 
     if unit == "characters":
-        for word in text_matter:
-            mean_len += len(word)
-        mean_len = mean_len / len(text_matter)
-
-    if unit == "words":
-        for piece in text_matter:
-            mean_len += len(piece.split())
-        mean_len = mean_len / len(text_matter)
-
-    return mean_len
+        return sum(len(word) for word in text_matter) / len(text_matter)
+    elif unit == "words":
+        return sum(len(piece.split()) for piece in text_matter) / len(text_matter)
+    else:
+        raise Exception("Error: Invalid unit. Please enter 'characters' or 'words'.")
 
 def get_sentences(text_matter):
     """given a text's matter, returns a list of its sentences"""
@@ -118,6 +123,15 @@ def get_paragraphs(text_matter):
     return text_matter.split("\n\n")
 
 def get_text_report(text_title, report_dict):
+    """
+    Generates a formatted text report based on the analysis of the text.
+
+    Parameters:
+    text_title (str): The title of the text being analyzed.
+    report_dict (dict): A dictionary containing the analysis results.
+
+    Returns a formatted string containing the text report.
+    """
     
     num_words = report_dict["num_words"]
     words_mean_length = report_dict["words_mean_length"]
@@ -127,18 +141,8 @@ def get_text_report(text_title, report_dict):
     parags_mean_len = report_dict["parags_mean_len"]
     
     def space(n, content):
-        result = ""
         x = int((n - len(str(content))) / 2)
-
-        for i in range(0, x):
-            result += " "
-
-        result += str(content)
-
-        for i in range(0, x):
-            result += " "
-
-        return result
+        return " " * x + str(content) + " " * x
     
     stats = lambda x, y: f"|{space(22, x)}|{space(26, y)}|\n"
 
@@ -150,7 +154,8 @@ def get_text_report(text_title, report_dict):
     text_report += "---------------------------------------------------\n"
     text_report += stats(num_words, words_mean_length)
     text_report += "---------------------------------------------------\n"
-    text_report += "---------------------------------------------------\n"
+    def stats(x, y):
+        return f"|{space(22, x)}|{space(26, y)}|\n"
     text_report += "|    Num. Sentences    |     Mean Sent. Length    |\n"
     text_report += "---------------------------------------------------\n"
     text_report += stats(num_sentences, sent_mean_len)

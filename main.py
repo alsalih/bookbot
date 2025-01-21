@@ -37,22 +37,21 @@ def main():
     # ************************************************************************#
 
     text_matter = get_text_matter(text_path)
+    report_dict = {}
 
     words = get_words(text_matter)
-    num_words = len(words)
-    words_mean_length = round(get_mean_length(words, "characters"), 2)
+    report_dict["num_words"] = len(words)
+    report_dict["words_mean_length"] = round(mean_len(words, "characters"), 2)
 
     sentences = get_sentences(text_matter)
-    num_sentences = len(sentences)
-    sentences_mean_length = round(get_mean_length(sentences, "words"), 2)
+    report_dict["num_sentences"] = len(sentences)
+    report_dict["sent_mean_len"] = round(mean_len(sentences, "words"), 2)
 
     paragraphs = get_paragraphs(text_matter)
-    num_paragraphs = len(paragraphs)
-    paragraphs_mean_length = round(get_mean_length(paragraphs, "words"), 2)
+    report_dict["num_paragraphs"] = len(paragraphs)
+    report_dict["parags_mean_len"] = round(mean_len(paragraphs, "words"), 2)
 
-    print(get_text_report(text_title, num_words, words_mean_length, sentences, 
-        num_sentences, sentences_mean_length, paragraphs, num_paragraphs, 
-        paragraphs_mean_length))
+    print(get_text_report(text_title, report_dict))
 
 # *** END main() *** 
 
@@ -75,22 +74,22 @@ def get_words(text_matter):
     """given a text's matter, returns a list of its words."""
     return text_matter.split()
 
-def get_mean_length(text_matter, unit):
+def mean_len(text_matter, unit):
     """given text matter as a list (words, sentences, or paragraphs), and a unit
     of either characters or words, returns the mean length in that unit."""
-    mean_length = 0
+    mean_len = 0
 
     if unit == "characters":
         for word in text_matter:
-            mean_length += len(word)
-        mean_length = mean_length / len(text_matter)
+            mean_len += len(word)
+        mean_len = mean_len / len(text_matter)
 
     if unit == "words":
         for piece in text_matter:
-            mean_length += len(piece.split())
-        mean_length = mean_length / len(text_matter)
+            mean_len += len(piece.split())
+        mean_len = mean_len / len(text_matter)
 
-    return mean_length
+    return mean_len
 
 def get_sentences(text_matter):
     """given a text's matter, returns a list of its sentences"""
@@ -118,9 +117,14 @@ def get_paragraphs(text_matter):
     """given a text's matter, returns a list of its paragraphs."""
     return text_matter.split("\n\n")
 
-def get_text_report(text_title, num_words, words_mean_length, sentences, 
-    num_sentences, sentences_mean_length, paragraphs, num_paragraphs, 
-    paragraphs_mean_length):
+def get_text_report(text_title, report_dict):
+    
+    num_words = report_dict["num_words"]
+    words_mean_length = report_dict["words_mean_length"]
+    num_sentences = report_dict["num_sentences"]
+    sent_mean_len = report_dict["sent_mean_len"]
+    num_paragraphs = report_dict["num_paragraphs"]
+    parags_mean_len = report_dict["parags_mean_len"]
     
     def space(n, content):
         result = ""

@@ -38,7 +38,7 @@ def main():
             print(f"Error: The file {text_path} was not found. Please try again.")
 
     # ************************************************************************#
-    # section 2: analyser analyses the text and displays the results in a report 
+    # section 2: analyser analyses the text and displays the results in a report
     # ************************************************************************#
 
     text_matter = get_text_matter(text_path)
@@ -55,8 +55,13 @@ def main():
     paragraphs = get_paragraphs(text_matter)
     report_dict["num_paragraphs"] = len(paragraphs)
     report_dict["parags_mean_len"] = round(mean_len(paragraphs, "words"), 2)
+    report_dict["word_frequencies"] = word_frequencies(words)
 
     print(get_text_report(text_title, report_dict))
+    foo = []
+    for word in report_dict["word_frequencies"][-1::-1]:
+        if word[1] > len(words) / 500:
+            foo.append(word)
 
 # *** END main() *** 
 
@@ -122,6 +127,15 @@ def get_paragraphs(text_matter):
     """given a text's matter, returns a list of its paragraphs."""
     return text_matter.split("\n\n")
 
+def word_frequencies(words):
+    freq_dict = {}
+    for word in words:
+        if word in freq_dict:
+            freq_dict[word] += 1
+        else:
+            freq_dict[word] = 1
+    return list(sorted(freq_dict.items(), key=lambda x: x[1], reverse=True))
+
 def get_text_report(text_title, report_dict):
     """
     Generates a formatted text report based on the analysis of the text.
@@ -139,6 +153,12 @@ def get_text_report(text_title, report_dict):
     sent_mean_len = report_dict["sent_mean_len"]
     num_paragraphs = report_dict["num_paragraphs"]
     parags_mean_len = report_dict["parags_mean_len"]
+
+    text_report = "\n...\n"
+
+    for item in report_dict:
+        if report_dict[item] is int:
+            text_report += f"|{item:<25}: {report_dict[item]:<10}\n"
     
     def space(n, content):
         x = int((n - len(str(content))) / 2)
@@ -146,7 +166,7 @@ def get_text_report(text_title, report_dict):
     
     stats = lambda x, y: f"|{space(22, x)}|{space(26, y)}|\n"
 
-    text_report = "\n...\n"
+    
     text_report += "\nThank you for using Text Analyser!\n\n"
     text_report += f"Here is your text report on {text_title.title()}:\n\n"
     text_report += "---------------------------------------------------\n"
@@ -154,8 +174,6 @@ def get_text_report(text_title, report_dict):
     text_report += "---------------------------------------------------\n"
     text_report += stats(num_words, words_mean_length)
     text_report += "---------------------------------------------------\n"
-    def stats(x, y):
-        return f"|{space(22, x)}|{space(26, y)}|\n"
     text_report += "|    Num. Sentences    |     Mean Sent. Length    |\n"
     text_report += "---------------------------------------------------\n"
     text_report += stats(num_sentences, sent_mean_len)
@@ -165,9 +183,19 @@ def get_text_report(text_title, report_dict):
     text_report += "---------------------------------------------------\n"
     text_report += stats(num_paragraphs, parags_mean_len)
     text_report += "---------------------------------------------------\n"
-    
+    text_report += "\nMost Frequent Words:\n"
+    for word in report_dict["word_frequencies"][:10]:
+        text_report += f"{word[0]}: {word[1]}\n"
+    text_report += "\nLeast Frequent Words (>0.1% to keep stat meaningful):\n"
+
+    counter = 0
+    for word in report_dict["word_frequencies"][-1::-1]:
+        if word[1] > len(report_dict["word_frequencies"]) / 1000 and counter < 10:
+            text_report += f"{word[0]}: {word[1]}\n"
+            counter += 1
     
     return text_report
+
 
 if __name__ == "__main__":
     main()

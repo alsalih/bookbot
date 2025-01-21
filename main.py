@@ -154,11 +154,7 @@ def get_text_report(text_title, report_dict):
     num_paragraphs = report_dict["num_paragraphs"]
     parags_mean_len = report_dict["parags_mean_len"]
 
-    text_report = "\n...\n"
-
-    for item in report_dict:
-        if report_dict[item] is int:
-            text_report += f"|{item:<25}: {report_dict[item]:<10}\n"
+    
     
     def space(n, content):
         x = int((n - len(str(content))) / 2)
@@ -166,32 +162,39 @@ def get_text_report(text_title, report_dict):
     
     stats = lambda x, y: f"|{space(22, x)}|{space(26, y)}|\n"
 
-    
+    cell_border = "-" * 50 + "\n"
+
+    text_report = "\n...\n"
     text_report += "\nThank you for using Text Analyser!\n\n"
     text_report += f"Here is your text report on {text_title.title()}:\n\n"
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
     text_report += "|      Num. Words      |      Mean Word length    |\n"
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
     text_report += stats(num_words, words_mean_length)
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
     text_report += "|    Num. Sentences    |     Mean Sent. Length    |\n"
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
     text_report += stats(num_sentences, sent_mean_len)
-    text_report += "---------------------------------------------------\n"
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
+    text_report += cell_border
     text_report += "|    Num. Paragraphs   |    Mean Parag. Length    |\n"
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
     text_report += stats(num_paragraphs, parags_mean_len)
-    text_report += "---------------------------------------------------\n"
+    text_report += cell_border
     text_report += "\nMost Frequent Words:\n"
+    text_report += "\n {:<10}: {:<5}\n".format("Word", "Frequency")
+    text_report += cell_border
+    
     for word in report_dict["word_frequencies"][:10]:
-        text_report += f"{word[0]}: {word[1]}\n"
+        text_report += f"'{word[0] + "'":<10}: {word[1]}\n"
         
     text_report += "\nLeast Frequent Words (>0.1% to keep stat meaningful):\n"
+    text_report += "\n {:<10}: {:<5}\n".format("Word", "Frequency")
+
     counter = 0
     for word in report_dict["word_frequencies"][-1::-1]:
         if word[1] > len(report_dict["word_frequencies"]) / 1000 and counter < 10:
-            text_report += f"{word[0]}: {word[1]}\n"
+            text_report += f"'{word[0] + "'":<10}: {word[1]:<5}\n"
             counter += 1
     
     return text_report
